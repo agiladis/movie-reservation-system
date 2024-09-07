@@ -32,7 +32,7 @@ public class Movie {
     @Column(nullable = false)
     private Integer duration;
 
-    @Column(name = "is_showing", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name = "is_showing", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isShowing ;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
