@@ -1,5 +1,6 @@
 package com.example.moviereservationsystem.service;
 
+import com.example.moviereservationsystem.dto.UserLoginDTO;
 import com.example.moviereservationsystem.dto.UserRegistrationDTO;
 import com.example.moviereservationsystem.exception.UserAlreadyExistsException;
 import com.example.moviereservationsystem.mapper.UserMapper;
@@ -32,5 +33,10 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
         return userRepository.save(newUser);
+    }
+
+    public User login(UserLoginDTO userDTO) {
+
+
     }
 }
