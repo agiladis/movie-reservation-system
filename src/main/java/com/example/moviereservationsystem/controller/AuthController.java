@@ -1,8 +1,9 @@
 package com.example.moviereservationsystem.controller;
 
 import com.example.moviereservationsystem.dto.UserDTO;
+import com.example.moviereservationsystem.dto.UserLoginDTO;
 import com.example.moviereservationsystem.dto.UserRegistrationDTO;
-import com.example.moviereservationsystem.exception.UserAlreadyExistsException;
+import com.example.moviereservationsystem.exception.UserErrorException;
 import com.example.moviereservationsystem.mapper.UserMapper;
 import com.example.moviereservationsystem.model.User;
 import com.example.moviereservationsystem.service.UserService;
@@ -17,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/users")
-public class UserController {
+@RequestMapping("/api/v1/auth")
+public class AuthController {
 
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public AuthController(UserService userService) {
         this.userService = userService;
     }
 
@@ -36,7 +37,20 @@ public class UserController {
 
             ApiResponse<UserDTO> response = new ApiResponse<>("success", "user registered successfully", userDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (UserAlreadyExistsException e) {
+        } catch (UserErrorException e) {
+            ApiResponse<UserDTO> response = new ApiResponse<>("error", e.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<UserDTO>> login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
+        try {
+            UserDTO userDTO = userService.login(userLoginDTO);
+
+            ApiResponse<UserDTO> response = new ApiResponse<>("success", "login success", userDTO);
+            return ResponseEntity.ok().body(response);
+        } catch (UserErrorException e) {
             ApiResponse<UserDTO> response = new ApiResponse<>("error", e.getMessage(), null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
